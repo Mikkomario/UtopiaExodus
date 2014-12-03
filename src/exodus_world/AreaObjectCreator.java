@@ -19,7 +19,7 @@ public class AreaObjectCreator implements AreaListener
 	// ATTRIBUTES	----------------------------
 	
 	private TextConstructorInstructor instructor;
-	private AbstractConstructor<ConstructableGameObject> constructor;
+	private AbstractConstructor<? extends ConstructableGameObject> constructor;
 	private String fileName;
 	private Area area;
 	
@@ -33,7 +33,7 @@ public class AreaObjectCreator implements AreaListener
 	 * ("data/" automatically included. %CHECK: is used for instructions)
 	 * @param area the area the objects will be placed to
 	 */
-	public AreaObjectCreator(AbstractConstructor<ConstructableGameObject> constructor, 
+	public AreaObjectCreator(AbstractConstructor<? extends ConstructableGameObject> constructor, 
 			String fileName, Area area)
 	{
 		// Initializes attributes

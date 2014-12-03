@@ -34,7 +34,7 @@ public class AreaBank
 	 * @return An areaBank with the given name
 	 */
 	@SuppressWarnings("unchecked")
-	public Bank<Area> getAreaBank(String bankName)
+	public static Bank<Area> getAreaBank(String bankName)
 	{
 		return (Bank<Area>) MultiMediaHolder.getBank(ExodusResourceType.AREA, bankName);
 	}
@@ -45,20 +45,18 @@ public class AreaBank
 	 * @param areaName The name of the area in the bank
 	 * @return An area from the bank
 	 */
-	public Area getArea(String bankName, String areaName)
+	public static Area getArea(String bankName, String areaName)
 	{
 		return getAreaBank(bankName).get(areaName);
 	}
 	
 	/**
-	 * Activates all areas that have been initialized
+	 * Activates an areaBank that has been initialized
+	 * @param areaBankName The name of the area bank that will be initialized
 	 */
-	public static void activateAreas()
+	public static void activateAreaBank(String areaBankName)
 	{
-		for (String bankName : MultiMediaHolder.getBankNames(ExodusResourceType.AREA))
-		{
-			MultiMediaHolder.activateBank(ExodusResourceType.AREA, bankName, false);
-		}
+		MultiMediaHolder.activateBank(ExodusResourceType.AREA, areaBankName, false);
 	}
 	
 	/**
@@ -74,18 +72,14 @@ public class AreaBank
 	 * @param handlerConstructor The object that will construct the required handlers
 	 * @param objectConstructorProvider The object that will provide the created 
 	 * AreaObjectCreators with suitable object constructors
-	 * @param activateAreas Should the areas be activated at this time so that they can 
-	 * freely be accessed and used.
+	 * @see #activateAreaBank(String)
 	 */
 	public static void initializeAreaResources(String fileName, 
 			AreaHandlerConstructor handlerConstructor, 
-			AreaObjectConstructorProvider objectConstructorProvider, boolean activateAreas)
+			AreaObjectConstructorProvider objectConstructorProvider)
 	{
 		MultiMediaHolder.initializeResourceDatabase(createAreaBankBank(fileName, 
 				handlerConstructor, objectConstructorProvider));
-		
-		if (activateAreas)
-			activateAreas();
 	}
 	
 	/**
@@ -163,7 +157,7 @@ public class AreaBank
 			// Creates an objectCreator if possible
 			if (arguments.length >= 4)
 				new AreaObjectCreator(
-						this.objectConstructorProvider.getConstructor(arguments[0]), 
+						this.objectConstructorProvider.getConstructor(newArea), 
 						arguments[3], newArea);
 		}
 	}

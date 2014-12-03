@@ -1,0 +1,9 @@
+UID1
+position=100,200
+UID2
+position=200,100
+scaling=2,2
+UID3
+position=50,50
+scaling=3,3
+shear=1,0

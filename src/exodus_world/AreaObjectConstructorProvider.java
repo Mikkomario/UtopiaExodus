@@ -15,8 +15,8 @@ public interface AreaObjectConstructorProvider
 {
 	/**
 	 * This method should provide a suitable object constructor for the given area.
-	 * @param areaName The name of the area the constructor will be used in
+	 * @param targetArea the area the objects will be placed to
 	 * @return An objectConstructor that can be used for constructing the objects in the area.
 	 */
-	public AbstractConstructor<ConstructableGameObject> getConstructor(String areaName);
+	public AbstractConstructor<ConstructableGameObject> getConstructor(Area targetArea);
 }

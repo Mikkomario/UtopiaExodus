@@ -7,13 +7,14 @@ import genesis_util.StateOperator;
  * Dependent GameObjects depend from other gameObjects' states.
  * 
  * @author Mikko Hilpinen
+ * @param <T> The type of object this gameObject depends from
  * @since 2.12.2014
  */
-public class DependentGameObject implements GameObject
+public class DependentGameObject<T extends GameObject> implements GameObject
 {
 	// ATTRIBUTES	---------------------------------
 	
-	private GameObject master;
+	private T master;
 	
 	
 	// CONSTRUCTOR	---------------------------------
@@ -24,7 +25,7 @@ public class DependentGameObject implements GameObject
 	 * @param master The object this object depends from.
 	 * @param handlers The handlers that will handle this object (optional)
 	 */
-	public DependentGameObject(GameObject master, HandlerRelay handlers)
+	public DependentGameObject(T master, HandlerRelay handlers)
 	{
 		// Initializes attributes
 		this.master = master;
@@ -47,5 +48,16 @@ public class DependentGameObject implements GameObject
 	public StateOperator getIsActiveStateOperator()
 	{
 		return this.master.getIsActiveStateOperator();
+	}
+	
+	
+	// GETTERS & SETTERS	----------------------------
+	
+	/**
+	 * @return The object this object depends from
+	 */
+	protected T getMaster()
+	{
+		return this.master;
 	}
 }
