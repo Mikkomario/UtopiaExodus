@@ -1,5 +1,6 @@
 package exodus_test;
 
+import exodus_world.Area;
 import exodus_world.AreaBank;
 import genesis_event.AdvancedKeyEvent;
 import genesis_event.AdvancedKeyEvent.KeyEventType;
@@ -53,6 +54,12 @@ public class ExodusTest
 		
 		// Creates the input system
 		new KeyCommander(window.getHandlerRelay());
+		
+		// Creates some test objects
+		Area area1 = AreaBank.getArea("test", "area1");
+		IndependentTestObject o = new IndependentTestObject(area1.getHandlers(), 
+				new Vector2D(150, 150));
+		new DependentTestObject(o, area1.getHandlers());
 	}
 	
 	

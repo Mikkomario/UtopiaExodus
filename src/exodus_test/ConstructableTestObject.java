@@ -1,5 +1,6 @@
 package exodus_test;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
@@ -88,6 +89,7 @@ public class ConstructableTestObject extends SimpleGameObject implements Transfo
 	@Override
 	public void drawSelf(Graphics2D g2d)
 	{
+		g2d.setColor(Color.RED);
 		
 		AffineTransform lastTransform = g2d.getTransform();
 		
@@ -95,12 +97,6 @@ public class ConstructableTestObject extends SimpleGameObject implements Transfo
 		g2d.drawOval(-5, -5, 10, 10);
 		
 		g2d.setTransform(lastTransform);
-		
-		/*
-		g2d.drawOval(getTransformation().getPosition().getFirstInt(), 
-				getTransformation().getPosition().getSecondInt(), 10, 10);
-				*/
-		//g2d.drawRect(10, 10, 100, 100);
 	}
 
 	@Override

@@ -91,10 +91,12 @@ public class Area extends Handler<GameObject> implements GameObject
 		
 		if (source == getIsActiveStateOperator())
 		{
+			// Activates or deactivates the gameObjects inside the area
 			if (newState)
 				ResourceActivator.startPhase(getPhase());
 			
 			this.listenerHandler.onAreaStateChange(this);
+			handleObjects();
 		}
 		// Kills the listenerHandler on death
 		else if (source == getIsDeadStateOperator() && newState)
