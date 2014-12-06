@@ -12,7 +12,6 @@ import genesis_event.Drawable;
 import genesis_event.HandlerRelay;
 import genesis_util.DepthConstants;
 import genesis_util.StateOperator;
-import genesis_util.Vector2D;
 
 /**
  * TestObject is made for testing exodus functionalities (transformation & construction)
