@@ -56,7 +56,7 @@ public class ExodusTest
 		Area area1 = AreaBank.getArea("test", "area1");
 		IndependentTestObject o = new IndependentTestObject(area1.getHandlers(), 
 				new Vector2D(150, 150));
-		new DependentTestObject(o, area1.getHandlers());
+		DependentTestObject dependent = new DependentTestObject(o, area1.getHandlers());
 		
 		// Creates an area graph
 		AreaGraph<Integer> areas = new AreaGraph<>("test", true);
@@ -70,7 +70,7 @@ public class ExodusTest
 		System.out.println("Edge is both ways: " + areas.getCurrentArea().getLeavingEdges().get(0).isBothWays());
 		
 		// Creates the input system
-		new KeyCommander(window.getHandlerRelay(), areas);
+		new KeyCommander(window.getHandlerRelay(), areas, dependent);
 	}
 	
 	
@@ -83,16 +83,19 @@ public class ExodusTest
 		private StateOperator isDeadStateOperator, isActiveStateOperator;
 		private EventSelector<AdvancedKeyEvent> selector;
 		private AreaGraph<Integer> graph;
+		private DependentTestObject dependent;
 		
 		
 		// CONSTRUCTOR	----------------------
 		
-		public KeyCommander(HandlerRelay handlers, AreaGraph<Integer> graph)
+		public KeyCommander(HandlerRelay handlers, AreaGraph<Integer> graph, 
+				DependentTestObject dependent)
 		{
 			this.isActiveStateOperator = new StateOperator(true, false);
 			this.isDeadStateOperator = new LatchStateOperator(false);
 			this.selector = AdvancedKeyEvent.createEventTypeSelector(KeyEventType.PRESSED);
 			this.graph = graph;
+			this.dependent = dependent;
 			
 			handlers.addHandled(this);
 		}
@@ -145,6 +148,9 @@ public class ExodusTest
 					System.out.println("Switching area");
 					System.out.println("success: " + this.graph.moveAlong(1));
 					break;
+				case '5':
+					System.out.println("Separates the dependent object");
+					this.dependent.separate();
 			}
 		}
 	}

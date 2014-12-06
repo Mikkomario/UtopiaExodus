@@ -131,8 +131,6 @@ public class Area extends Handler<GameObject> implements GameObject
 			this.listenerHandler.removeAllHandleds();
 			this.listenerHandler.getIsDeadStateOperator().setState(true);
 		}
-		
-		System.out.println("Area state change. Current size: " + this.getHandledNumber());
 	}
 	
 	

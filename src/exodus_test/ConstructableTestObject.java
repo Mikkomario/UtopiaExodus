@@ -61,17 +61,7 @@ public class ConstructableTestObject extends SimpleGameObject implements Transfo
 	{
 		System.out.println(getID() + "updating " + attributeName + " to " + attributeValue);
 		
-		switch (attributeName)
-		{
-			case "position": setTrasformation(getTransformation().withPosition(
-					Vector2D.parseFromString(attributeValue))); break;
-			case "scaling": setTrasformation(getTransformation().withScaling(
-					Vector2D.parseFromString(attributeValue))); break;
-			case "shear": setTrasformation(getTransformation().withShear(
-					Vector2D.parseFromString(attributeValue))); break;
-			case "angle": setTrasformation(getTransformation().withAngle(
-					Double.parseDouble(attributeValue))); break;
-		}
+		setTrasformation(getTransformation().withAttribute(attributeName, attributeValue));
 	}
 
 	@Override
@@ -93,7 +83,7 @@ public class ConstructableTestObject extends SimpleGameObject implements Transfo
 		
 		AffineTransform lastTransform = g2d.getTransform();
 		
-		g2d.setTransform(getTransformation().toAffineTransform());
+		getTransformation().transform(g2d);
 		g2d.drawOval(-5, -5, 10, 10);
 		
 		g2d.setTransform(lastTransform);
