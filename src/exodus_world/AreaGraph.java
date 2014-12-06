@@ -147,13 +147,19 @@ public class AreaGraph<T> extends Graph<Area, T>
 			return false;
 		
 		// Moves to the new area
-		return moveTo(edges.get(0).getEndNode());
+		GraphNode<Area, T> destination = edges.get(0).getEndNode();
+		if (destination == getCurrentArea())
+			destination = edges.get(0).getStartNode();
+		
+		return moveTo(destination);
 	}
 	
 	private boolean moveTo(GraphNode<Area, T> newNode)
 	{
 		if (newNode == null)
 			return false;
+		if (newNode == getCurrentArea())
+			return true;
 		
 		Area previousArea = null;
 		if (this.currentNode != null)

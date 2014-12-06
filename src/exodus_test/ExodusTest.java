@@ -2,6 +2,7 @@ package exodus_test;
 
 import exodus_world.Area;
 import exodus_world.AreaBank;
+import exodus_world.AreaGraph;
 import genesis_event.AdvancedKeyEvent;
 import genesis_event.AdvancedKeyEvent.KeyEventType;
 import genesis_event.AdvancedKeyListener;
@@ -12,7 +13,6 @@ import genesis_util.StateOperator;
 import genesis_util.Vector2D;
 import genesis_video.GamePanel;
 import genesis_video.GameWindow;
-import genesis_video.MainPanel.ScreenSplit;
 import arc_bank.GamePhaseBank;
 
 /**
@@ -44,7 +44,7 @@ public class ExodusTest
 		
 		// Opens the window
 		GameWindow window = new GameWindow(new Vector2D(300, 300), "Exodus Test", true, 120, 
-				20, ScreenSplit.HORIZONTAL, false);
+				20);
 		GamePanel panel = window.getMainPanel().addGamePanel();
 		
 		// Initializes areas
@@ -52,14 +52,25 @@ public class ExodusTest
 				new TestHandlerConstructor(window, panel), new TestObjectConstructorProvider());
 		AreaBank.activateAreaBank("test");
 		
-		// Creates the input system
-		new KeyCommander(window.getHandlerRelay());
-		
 		// Creates some test objects
 		Area area1 = AreaBank.getArea("test", "area1");
 		IndependentTestObject o = new IndependentTestObject(area1.getHandlers(), 
 				new Vector2D(150, 150));
 		new DependentTestObject(o, area1.getHandlers());
+		
+		// Creates an area graph
+		AreaGraph<Integer> areas = new AreaGraph<>("test", true);
+		areas.connectAreas("area1", "area2", 1, true, false);
+		
+		// Moves to the first area
+		areas.moveTo("area1");
+		
+		System.out.println("Edges leaving from area1: " + areas.getCurrentArea().getLeavingEdgeAmount());
+		System.out.println("Edges leaving from area2: " + areas.findArea("area2").getLeavingEdgeAmount());
+		System.out.println("Edge is both ways: " + areas.getCurrentArea().getLeavingEdges().get(0).isBothWays());
+		
+		// Creates the input system
+		new KeyCommander(window.getHandlerRelay(), areas);
 	}
 	
 	
@@ -71,15 +82,17 @@ public class ExodusTest
 		
 		private StateOperator isDeadStateOperator, isActiveStateOperator;
 		private EventSelector<AdvancedKeyEvent> selector;
+		private AreaGraph<Integer> graph;
 		
 		
 		// CONSTRUCTOR	----------------------
 		
-		public KeyCommander(HandlerRelay handlers)
+		public KeyCommander(HandlerRelay handlers, AreaGraph<Integer> graph)
 		{
 			this.isActiveStateOperator = new StateOperator(true, false);
 			this.isDeadStateOperator = new LatchStateOperator(false);
 			this.selector = AdvancedKeyEvent.createEventTypeSelector(KeyEventType.PRESSED);
+			this.graph = graph;
 			
 			handlers.addHandled(this);
 		}
@@ -127,6 +140,10 @@ public class ExodusTest
 				case '4': 
 					System.out.println("Ending area 2");
 					AreaBank.getArea("test", "area2").getIsActiveStateOperator().setState(false); 
+					break;
+				case 's':
+					System.out.println("Switching area");
+					System.out.println("success: " + this.graph.moveAlong(1));
 					break;
 			}
 		}
