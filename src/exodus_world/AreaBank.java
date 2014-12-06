@@ -1,5 +1,8 @@
 package exodus_world;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import exodus_util.ExodusResourceType;
 import arc_bank.Bank;
 import arc_bank.BankBank;
@@ -60,6 +63,15 @@ public class AreaBank
 	}
 	
 	/**
+	 * Deactivates an areaBank. The bank shouldn't be in use when this method is called.
+	 * @param areaBankName The name of the bank that should be deactivated.
+	 */
+	public static void deactivateAreaBank(String areaBankName)
+	{
+		MultiMediaHolder.deactivateBank(ExodusResourceType.AREA, areaBankName);
+	}
+	
+	/**
 	 * Initializes the area resources. The GamePhases should be initialized before this method 
 	 * is called (which means that areas can't be used in the GamePhases).
 	 * @param fileName The name of the file that contains construction information 
@@ -107,6 +119,26 @@ public class AreaBank
 				ExodusResourceType.AREA);
 	}
 	
+	/**
+	 * @return All the areas that are currently active / in use
+	 */
+	public static List<Area> getActiveAreas()
+	{
+		List<Area> activeAreas = new ArrayList<>();
+		
+		for (String areaBankName : MultiMediaHolder.getActiveBankNames(ExodusResourceType.AREA))
+		{
+			for (String areaName : getAreaBank(areaBankName).getContentNames())
+			{
+				Area area = getArea(areaBankName, areaName);
+				if (area.getIsActiveStateOperator().getState())
+					activeAreas.add(area);
+			}
+		}
+		
+		return activeAreas;
+	}
+	
 	
 	// SUBCLASSES	--------------------------
 	
@@ -131,7 +163,7 @@ public class AreaBank
 		// IMPLEMENTED METHODS	---------------
 		
 		@Override
-		public void construct(String line, Bank<Area> bank)
+		public Area construct(String line, Bank<Area> bank)
 		{
 			// Line contains information:
 			// objectName#phaseName
@@ -159,15 +191,19 @@ public class AreaBank
 				new AreaObjectCreator(
 						this.objectConstructorProvider.getConstructor(newArea), 
 						arguments[3], newArea);
+			
+			return newArea;
 		}
 	}
 	
 	private static class AreaBankConstructor implements BankObjectConstructor<Bank<Area>>
 	{
 		@Override
-		public void construct(String line, Bank<Bank<Area>> bank)
+		public Bank<Area> construct(String line, Bank<Bank<Area>> bank)
 		{
-			bank.put(line, new Bank<>());
+			Bank<Area> newBank = new Bank<>();
+			bank.put(line, newBank);
+			return newBank;
 		}	
 	}
 }

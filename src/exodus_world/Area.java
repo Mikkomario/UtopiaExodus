@@ -1,5 +1,7 @@
 package exodus_world;
 
+import java.util.List;
+
 import exodus_object.GameObject;
 import exodus_util.ExodusHandlerType;
 import arc_resource.GamePhase;
@@ -25,6 +27,7 @@ public class Area extends Handler<GameObject> implements GameObject
 	private HandlerRelay handlers;
 	private GamePhase phase;
 	private StateOperator isActiveOperator;
+	private boolean willDeactivateOthers;
 	
 	
 	// CONSTRUCTOR	--------------------------------
@@ -44,6 +47,7 @@ public class Area extends Handler<GameObject> implements GameObject
 		this.handlers = handlers;
 		this.isActiveOperator = new StateOperator(false, true);
 		this.listenerHandler = new AreaListenerHandler(false);
+		this.willDeactivateOthers = false;
 		
 		// Initializes handlers
 		this.handlers.addHandler(this);
@@ -93,7 +97,22 @@ public class Area extends Handler<GameObject> implements GameObject
 		{
 			// Activates or deactivates the gameObjects inside the area
 			if (newState)
-				ResourceActivator.startPhase(getPhase());
+			{
+				// May deactivate other areas
+				if (this.willDeactivateOthers)
+				{
+					for (Area area : getOtherActiveAreas())
+					{
+						area.end();
+					}
+				}
+				
+				ResourceActivator.startPhase(getPhase(), this.willDeactivateOthers);
+				this.willDeactivateOthers = false;
+			}
+			// May deactivate resources if the gamePhase is not used by any area
+			else if (!otherAreasSharePhase())
+				ResourceActivator.endPhase(getPhase());
 			
 			this.listenerHandler.onAreaStateChange(this);
 			handleObjects();
@@ -139,5 +158,50 @@ public class Area extends Handler<GameObject> implements GameObject
 	public AreaListenerHandler getListenerHandler()
 	{
 		return this.listenerHandler;
+	}
+
+	
+	// OTHER METHODS	-------------------------------
+	
+	/**
+	 * Starts the area. The same (without closing other areas) can be achieved just by 
+	 * activating the area.
+	 * @param endPreviousAreas Will the previous areas be ended as this area starts (also 
+	 * handles the GamePhases and resource deactivation)
+	 */
+	public void start(boolean endPreviousAreas)
+	{
+		this.willDeactivateOthers = endPreviousAreas;
+		getIsActiveStateOperator().setState(true);
+	}
+	
+	/**
+	 * Ends the area, ending the gamePhase if possible. The same can be achieved by 
+	 * simply deactivating the area.
+	 */
+	public void end()
+	{
+		getIsActiveStateOperator().setState(false);
+	}
+	
+	private List<Area> getOtherActiveAreas()
+	{
+		if (!getIsActiveStateOperator().getState())
+			return AreaBank.getActiveAreas();
+		
+		List<Area> activeAreas = AreaBank.getActiveAreas();
+		activeAreas.remove(this);
+		return activeAreas;
+	}
+	
+	private boolean otherAreasSharePhase()
+	{
+		for (Area area : getOtherActiveAreas())
+		{
+			if (area.getPhase() == getPhase())
+				return true;
+		}
+		
+		return false;
 	}
 }
