@@ -15,6 +15,7 @@ public class DependentGameObject<T extends GameObject> implements GameObject
 	// ATTRIBUTES	---------------------------------
 	
 	private T master;
+	private StateOperator separateIsDeadOperator, separateIsActiveOperator;
 	
 	
 	// CONSTRUCTOR	---------------------------------
@@ -28,7 +29,7 @@ public class DependentGameObject<T extends GameObject> implements GameObject
 	public DependentGameObject(T master, HandlerRelay handlers)
 	{
 		// Initializes attributes
-		this.master = master;
+		setMaster(master);
 		
 		// Adds the object to the handler(s)
 		if (handlers != null)
@@ -41,17 +42,47 @@ public class DependentGameObject<T extends GameObject> implements GameObject
 	@Override
 	public StateOperator getIsDeadStateOperator()
 	{
-		return this.master.getIsDeadStateOperator();
+		if (getMaster() != null)
+			return this.master.getIsDeadStateOperator();
+		else
+			return this.separateIsDeadOperator;
 	}
 
 	@Override
 	public StateOperator getIsActiveStateOperator()
 	{
-		return this.master.getIsActiveStateOperator();
+		if (getMaster() != null)
+			return this.master.getIsActiveStateOperator();
+		else
+			return this.separateIsActiveOperator;
 	}
 	
 	
 	// GETTERS & SETTERS	----------------------------
+	
+	/**
+	 * Changes this object's master, making it depend from another object instead
+	 * @param newMaster The new master object for this object to depend from
+	 */
+	public void setMaster(T newMaster)
+	{
+		this.master = newMaster;
+		
+		// If the new master is null, has to use own stateOperators (= dies)
+		if (newMaster == null)
+		{
+			this.separateIsActiveOperator = new StateOperator(false, false);
+			this.separateIsDeadOperator = new StateOperator(true, false);
+		}
+	}
+	
+	/**
+	 * Separates the object from its master. The object will automatically die.
+	 */
+	public void separate()
+	{
+		setMaster(null);
+	}
 	
 	/**
 	 * @return The object this object depends from

@@ -1,6 +1,5 @@
 package exodus_test;
 
-import exodus_object.ConstructableGameObject;
 import exodus_world.Area;
 import exodus_world.AreaObjectConstructorProvider;
 import flow_recording.AbstractConstructor;
@@ -12,12 +11,12 @@ import flow_recording.AbstractConstructor;
  * @since 3.12.2014
  */
 public class TestObjectConstructorProvider implements
-		AreaObjectConstructorProvider
+		AreaObjectConstructorProvider<ConstructableTestObject>
 {
 	// IMPLEMENTED METHODS	---------------------------
 	
 	@Override
-	public AbstractConstructor<ConstructableGameObject> getConstructor(Area targetArea)
+	public AbstractConstructor<ConstructableTestObject> getConstructor(Area targetArea)
 	{
 		return new TestObjectConstructor(targetArea);
 	}
@@ -25,7 +24,7 @@ public class TestObjectConstructorProvider implements
 	
 	// SUBCLASSES	------------------------------
 	
-	private static class TestObjectConstructor extends AbstractConstructor<ConstructableGameObject>
+	private static class TestObjectConstructor extends AbstractConstructor<ConstructableTestObject>
 	{
 		// ATTRIBUTES	--------------------------
 		
@@ -43,7 +42,7 @@ public class TestObjectConstructorProvider implements
 		// IMPLEMENTED METHODS	------------------
 		
 		@Override
-		protected ConstructableGameObject createConstructable(String instruction)
+		protected ConstructableTestObject createConstructable(String instruction)
 		{
 			return new ConstructableTestObject(this.targetArea.getHandlers());
 		}	

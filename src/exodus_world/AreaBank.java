@@ -8,10 +8,7 @@ import arc_bank.Bank;
 import arc_bank.BankBank;
 import arc_bank.BankBankInitializer;
 import arc_bank.BankObjectConstructor;
-import arc_bank.GamePhaseBank;
 import arc_bank.MultiMediaHolder;
-import arc_bank.ResourceInitializationException;
-import arc_resource.GamePhase;
 
 /**
  * AreaBank is a static accessor to the area resource.
@@ -88,7 +85,7 @@ public class AreaBank
 	 */
 	public static void initializeAreaResources(String fileName, 
 			AreaHandlerConstructor handlerConstructor, 
-			AreaObjectConstructorProvider objectConstructorProvider)
+			AreaObjectConstructorProvider<?> objectConstructorProvider)
 	{
 		MultiMediaHolder.initializeResourceDatabase(createAreaBankBank(fileName, 
 				handlerConstructor, objectConstructorProvider));
@@ -112,7 +109,7 @@ public class AreaBank
 	 */
 	public static BankBank<Area> createAreaBankBank(String fileName, 
 			AreaHandlerConstructor handlerConstructor, 
-			AreaObjectConstructorProvider objectConstructorProvider)
+			AreaObjectConstructorProvider<?> objectConstructorProvider)
 	{
 		return new BankBank<>(new BankBankInitializer<>(fileName, new AreaBankConstructor(), 
 				new AreaConstructor(handlerConstructor, objectConstructorProvider)), 
@@ -147,13 +144,13 @@ public class AreaBank
 		// ATTRIBUTES	----------------------
 		
 		private AreaHandlerConstructor handlerConstructor;
-		private AreaObjectConstructorProvider objectConstructorProvider;
+		private AreaObjectConstructorProvider<?> objectConstructorProvider;
 		
 		
 		// CONSTRUCTOR	----------------------
 		
 		public AreaConstructor(AreaHandlerConstructor handlerConstructor, 
-				AreaObjectConstructorProvider objectConstructorProvider)
+				AreaObjectConstructorProvider<?> objectConstructorProvider)
 		{
 			this.handlerConstructor = handlerConstructor;
 			this.objectConstructorProvider = objectConstructorProvider;
@@ -165,33 +162,10 @@ public class AreaBank
 		@Override
 		public Area construct(String line, Bank<Area> bank)
 		{
-			// Line contains information:
-			// objectName#phaseName
-			// OR objectName#phaseBankName#phaseName
-			// OR objectName#phaseBankName#phaseName#objectConstructorFileName
-			String[] arguments = line.split("#");
-			
-			if (arguments.length < 2)
-				throw new ResourceInitializationException("Can't construct an area from line: " 
-						+ line + ". The line has too few arguments.");
-			
-			GamePhase phase = null;
-			
-			if (arguments.length >= 3)
-				phase = GamePhaseBank.getGamePhase(arguments[1], arguments[2]);
-			else
-				phase = GamePhaseBank.getGamePhase(arguments[1]);
-			
-			Area newArea = new Area(arguments[0], phase, 
-					this.handlerConstructor.constructRelay(arguments[1]));
-			bank.put(arguments[0], newArea);
-			
-			// Creates an objectCreator if possible
-			if (arguments.length >= 4)
-				new AreaObjectCreator(
-						this.objectConstructorProvider.getConstructor(newArea), 
-						arguments[3], newArea);
-			
+			// Uses an areaParser to construct the area (and the objectCreator)
+			Area newArea = new AreaParser(this.handlerConstructor, 
+					this.objectConstructorProvider).parseFromString(line);
+			bank.put(newArea.getName(), newArea);
 			return newArea;
 		}
 	}

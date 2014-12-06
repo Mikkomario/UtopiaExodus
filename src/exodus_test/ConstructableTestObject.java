@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import exodus_object.ConstructableGameObject;
 import exodus_object.SimpleGameObject;
 import exodus_util.Transformable;
 import exodus_util.Transformation;
+import flow_recording.Constructable;
 import genesis_event.Drawable;
 import genesis_event.HandlerRelay;
 import genesis_util.DepthConstants;
@@ -21,7 +21,7 @@ import genesis_util.Vector2D;
  * @since 3.12.2014
  */
 public class ConstructableTestObject extends SimpleGameObject implements Transformable,
-		Drawable, ConstructableGameObject
+		Drawable, Constructable<ConstructableTestObject>
 {
 	// ATTRIBUTES	----------------------------
 	
@@ -81,7 +81,7 @@ public class ConstructableTestObject extends SimpleGameObject implements Transfo
 	}
 
 	@Override
-	public void setLink(String linkName, ConstructableGameObject target)
+	public void setLink(String linkName, ConstructableTestObject target)
 	{
 		// Doesn't use links
 	}

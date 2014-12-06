@@ -4,6 +4,7 @@ import java.util.List;
 
 import exodus_object.GameObject;
 import exodus_util.ExodusHandlerType;
+import arc_bank.GamePhaseBank;
 import arc_resource.GamePhase;
 import arc_resource.ResourceActivator;
 import genesis_event.Handler;
@@ -22,10 +23,9 @@ public class Area extends Handler<GameObject> implements GameObject
 {
 	// ATTRIBUTES	--------------------------------
 	
-	private String name;
+	private String name, gamePhaseBankName, gamePhaseName, objectConstructorFileName;
 	private AreaListenerHandler listenerHandler;
 	private HandlerRelay handlers;
-	private GamePhase phase;
 	private StateOperator isActiveOperator;
 	private boolean willDeactivateOthers;
 	
@@ -35,15 +35,23 @@ public class Area extends Handler<GameObject> implements GameObject
 	/**
 	 * Creates a new Area
 	 * @param name The name of the area
-	 * @param phase The gamePhase that will be activated once the area starts
 	 * @param handlers The handlers that will be used in this area
+	 * @param gamePhaseBankName The name of the GamePhaseBank that contains the gamePhase 
+	 * that is used in this area (optional, default bank will be used if left null)
+	 * @param gamePhaseName The name of the gamePhase used in this area
+	 * @param objectConstructorFileName The name of the file that contains data used by an 
+	 * objectCreator (optional, the fileName can be provided directly to the creator as well)
 	 */
-	public Area(String name, GamePhase phase, HandlerRelay handlers)
+	public Area(String name, HandlerRelay handlers, String gamePhaseBankName, 
+			String gamePhaseName, String objectConstructorFileName)
 	{
 		super(false, handlers);
 		
 		// Initializes attributes
-		this.phase = phase;
+		this.name = name;
+		this.gamePhaseBankName = gamePhaseBankName;
+		this.gamePhaseName = gamePhaseName;
+		this.objectConstructorFileName = objectConstructorFileName;
 		this.handlers = handlers;
 		this.isActiveOperator = new StateOperator(false, true);
 		this.listenerHandler = new AreaListenerHandler(false);
@@ -141,7 +149,10 @@ public class Area extends Handler<GameObject> implements GameObject
 	 */
 	public GamePhase getPhase()
 	{
-		return this.phase;
+		if (this.gamePhaseBankName == null)
+			return GamePhaseBank.getGamePhase(this.gamePhaseName);
+		else
+			return GamePhaseBank.getGamePhase(this.gamePhaseBankName, this.gamePhaseName);
 	}
 	
 	/**
@@ -158,6 +169,30 @@ public class Area extends Handler<GameObject> implements GameObject
 	public AreaListenerHandler getListenerHandler()
 	{
 		return this.listenerHandler;
+	}
+	
+	/**
+	 * @return The name of the GamePhaseBank this area uses
+	 */
+	protected String getGamePhaseBankName()
+	{
+		return this.gamePhaseBankName;
+	}
+	
+	/**
+	 * @return The name of the GamePhase this area uses
+	 */
+	protected String getGamePhaseName()
+	{
+		return this.gamePhaseName;
+	}
+	
+	/**
+	 * @return The file the objectCreators in this area should use by default
+	 */
+	protected String getOjectConstructorFileName()
+	{
+		return this.objectConstructorFileName;
 	}
 
 	
