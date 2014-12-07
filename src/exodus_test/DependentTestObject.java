@@ -48,7 +48,7 @@ public class DependentTestObject extends DependentGameObject<IndependentTestObje
 	@Override
 	public Transformation getTransformation()
 	{
-		return getMaster().getTransformation().plus(this.ownTransformation);
+		return getMaster().getTransformation().transform(this.ownTransformation);
 	}
 
 	@Override

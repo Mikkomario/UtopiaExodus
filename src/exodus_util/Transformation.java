@@ -152,6 +152,17 @@ public final class Transformation
 	}
 	
 	/**
+	 * Transforms a transformation, making it use this transformation's coordinate system.
+	 * @param other The transformation that will be transfrormed
+	 * @return a transformed transformation
+	 */
+	public Transformation transform(Transformation other)
+	{
+		Vector2D transformedPosition = transform(other.getPosition());
+		return this.plus(other).withPosition(transformedPosition);
+	}
+	
+	/**
 	 * Checks if the two transformations are similar to each other
 	 * @param other The transformation this one is compared to
 	 * @return Are the two transformations identical
