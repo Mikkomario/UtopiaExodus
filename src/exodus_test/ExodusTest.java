@@ -58,6 +58,9 @@ public class ExodusTest
 				new Vector2D(150, 150));
 		DependentTestObject dependent = new DependentTestObject(o, area1.getHandlers());
 		
+		new TestTransformationInputObject(AreaBank.getArea("test", "area3").getHandlers(), 
+				new Vector2D(150, 150));
+		
 		// Creates an area graph
 		AreaGraph<Integer> areas = new AreaGraph<>("test", true);
 		areas.connectAreas("area1", "area2", 1, true, false);
@@ -65,9 +68,12 @@ public class ExodusTest
 		// Moves to the first area
 		areas.moveTo("area1");
 		
-		System.out.println("Edges leaving from area1: " + areas.getCurrentArea().getLeavingEdgeAmount());
-		System.out.println("Edges leaving from area2: " + areas.findArea("area2").getLeavingEdgeAmount());
-		System.out.println("Edge is both ways: " + areas.getCurrentArea().getLeavingEdges().get(0).isBothWays());
+		System.out.println("Edges leaving from area1: " + 
+				areas.getCurrentArea().getLeavingEdgeAmount());
+		System.out.println("Edges leaving from area2: " + 
+				areas.findArea("area2").getLeavingEdgeAmount());
+		System.out.println("Edge is both ways: " + 
+				areas.getCurrentArea().getLeavingEdges().get(0).isBothWays());
 		
 		// Creates the input system
 		new KeyCommander(window.getHandlerRelay(), areas, dependent);
@@ -144,13 +150,17 @@ public class ExodusTest
 					System.out.println("Ending area 2");
 					AreaBank.getArea("test", "area2").getIsActiveStateOperator().setState(false); 
 					break;
-				case 's':
+				case 'y':
 					System.out.println("Switching area");
 					System.out.println("success: " + this.graph.moveAlong(1));
 					break;
 				case '5':
 					System.out.println("Separates the dependent object");
 					this.dependent.separate();
+				case '6':
+					System.out.println("Switching to mouse test area");
+					this.graph.moveTo("area3");
+					break;
 			}
 		}
 	}

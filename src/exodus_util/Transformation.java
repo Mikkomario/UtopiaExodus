@@ -2,6 +2,7 @@ package exodus_util;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,7 +149,31 @@ public final class Transformation
 	 */
 	public Vector2D inverseTransform(Vector2D absoluteCoordinates)
 	{
-		return this.inverse().transform(absoluteCoordinates);
+		AffineTransform transform = this.toAffineTransform();
+		AffineTransform inverse = null;
+		
+		try
+		{	
+			if (transform.getDeterminant() != 0)
+			{
+				inverse = new AffineTransform(transform);
+				inverse.invert();
+			}
+			else
+			{
+				// In the case the current transformation can't be inverted, 
+				// inverts the translations (seems to be enough)
+				inverse = new AffineTransform();
+				inverse.translate(-getPosition().getFirst(), -getPosition().getSecond());
+			}
+		}
+		catch (NoninvertibleTransformException exception)
+		{
+			System.err.println("Failed to inverse transform a position");
+			exception.printStackTrace();
+		}
+		
+		return new Vector2D(inverse.transform(absoluteCoordinates.toPoint(), null));
 	}
 	
 	/**
@@ -181,6 +206,7 @@ public final class Transformation
 	 */
 	public Transformation inverse()
 	{
+		// TODO: Test
 		return new Transformation(getPosition().reverse(), 
 				Vector2D.identityVector().dividedBy(getScaling()), getShear().reverse(), 
 				HelpMath.checkDirection(-getAngle()));
@@ -364,6 +390,16 @@ public final class Transformation
 	public static Transformation scalingTransformation(Vector2D scaling)
 	{
 		return identityTransformation().withScaling(scaling);
+	}
+	
+	/**
+	 * @param scaling The scaling attribute of the transformation
+	 * @return A transformation that only affects the scaling attribute when combined 
+	 * with another transformation
+	 */
+	public static Transformation scalingTransformation(double scaling)
+	{
+		return identityTransformation().withScaling(new Vector2D(scaling, scaling));
 	}
 	
 	/**
