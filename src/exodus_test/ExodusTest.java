@@ -1,6 +1,5 @@
 package exodus_test;
 
-import exodus_world.Area;
 import exodus_world.AreaBank;
 import exodus_world.AreaGraph;
 import genesis_event.AdvancedKeyEvent;
@@ -52,15 +51,6 @@ public class ExodusTest
 				new TestHandlerConstructor(window, panel), new TestObjectConstructorProvider());
 		AreaBank.activateAreaBank("test");
 		
-		// Creates some test objects
-		Area area1 = AreaBank.getArea("test", "area1");
-		IndependentTestObject o = new IndependentTestObject(area1.getHandlers(), 
-				new Vector2D(150, 150));
-		DependentTestObject dependent = new DependentTestObject(o, area1.getHandlers());
-		
-		new TestTransformationInputObject(AreaBank.getArea("test", "area3").getHandlers(), 
-				new Vector2D(150, 150));
-		
 		// Creates an area graph
 		AreaGraph<Integer> areas = new AreaGraph<>("test", true);
 		areas.connectAreas("area1", "area2", 1, true, false);
@@ -76,7 +66,7 @@ public class ExodusTest
 				areas.getCurrentArea().getLeavingEdges().get(0).isBothWays());
 		
 		// Creates the input system
-		new KeyCommander(window.getHandlerRelay(), areas, dependent);
+		new KeyCommander(window.getHandlerRelay(), areas);
 	}
 	
 	
@@ -89,19 +79,16 @@ public class ExodusTest
 		private StateOperator isDeadStateOperator, isActiveStateOperator;
 		private EventSelector<AdvancedKeyEvent> selector;
 		private AreaGraph<Integer> graph;
-		private DependentTestObject dependent;
 		
 		
 		// CONSTRUCTOR	----------------------
 		
-		public KeyCommander(HandlerRelay handlers, AreaGraph<Integer> graph, 
-				DependentTestObject dependent)
+		public KeyCommander(HandlerRelay handlers, AreaGraph<Integer> graph)
 		{
 			this.isActiveStateOperator = new StateOperator(true, false);
 			this.isDeadStateOperator = new LatchStateOperator(false);
 			this.selector = AdvancedKeyEvent.createEventTypeSelector(KeyEventType.PRESSED);
 			this.graph = graph;
-			this.dependent = dependent;
 			
 			handlers.addHandled(this);
 		}
@@ -153,13 +140,6 @@ public class ExodusTest
 				case 'y':
 					System.out.println("Switching area");
 					System.out.println("success: " + this.graph.moveAlong(1));
-					break;
-				case '5':
-					System.out.println("Separates the dependent object");
-					this.dependent.separate();
-				case '6':
-					System.out.println("Switching to mouse test area");
-					this.graph.moveTo("area3");
 					break;
 			}
 		}

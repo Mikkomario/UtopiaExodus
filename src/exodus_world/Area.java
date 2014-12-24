@@ -2,7 +2,7 @@ package exodus_world;
 
 import java.util.List;
 
-import exodus_object.GameObject;
+import omega_util.GameObject;
 import exodus_util.ExodusHandlerType;
 import arc_bank.GamePhaseBank;
 import arc_resource.GamePhase;

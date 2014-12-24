@@ -1,5 +1,6 @@
-package exodus_object;
+package exodus_util;
 
+import omega_util.GameObject;
 import flow_recording.Constructable;
 
 /**

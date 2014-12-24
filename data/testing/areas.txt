@@ -1,4 +1,3 @@
 &test
 area1#test#phase1#testing/area1.txt
 area2#test#phase2#testing/area2.txt
-area3#phase1

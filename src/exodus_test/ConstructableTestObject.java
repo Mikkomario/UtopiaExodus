@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import exodus_object.SimpleGameObject;
-import exodus_util.Transformable;
-import exodus_util.Transformation;
+import omega_util.SimpleGameObject;
+import omega_util.Transformable;
+import omega_util.Transformation;
 import flow_recording.Constructable;
 import genesis_event.Drawable;
 import genesis_event.HandlerRelay;

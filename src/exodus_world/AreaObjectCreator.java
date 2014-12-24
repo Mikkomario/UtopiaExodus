@@ -2,7 +2,7 @@ package exodus_world;
 
 import java.io.FileNotFoundException;
 
-import exodus_object.GameObject;
+import omega_util.GameObject;
 import flow_recording.AbstractConstructor;
 import flow_recording.Constructable;
 import flow_recording.TextConstructorInstructor;

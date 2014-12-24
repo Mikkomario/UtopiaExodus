@@ -1,6 +1,6 @@
 package exodus_util;
 
-import exodus_object.SimpleGameObject;
+import omega_util.SimpleGameObject;
 import exodus_world.AreaListener;
 import genesis_event.HandlerType;
 
