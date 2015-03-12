@@ -2,11 +2,11 @@ package exodus_test;
 
 import exodus_world.AreaBank;
 import exodus_world.AreaGraph;
-import genesis_event.AdvancedKeyEvent;
-import genesis_event.AdvancedKeyEvent.KeyEventType;
-import genesis_event.AdvancedKeyListener;
 import genesis_event.EventSelector;
 import genesis_event.HandlerRelay;
+import genesis_event.KeyEvent;
+import genesis_event.KeyEvent.KeyEventType;
+import genesis_event.KeyListener;
 import genesis_util.LatchStateOperator;
 import genesis_util.StateOperator;
 import genesis_util.Vector2D;
@@ -72,12 +72,12 @@ public class ExodusTest
 	
 	// SUBCLASSES	------------------------
 	
-	private static class KeyCommander implements AdvancedKeyListener
+	private static class KeyCommander implements KeyListener
 	{
 		// ATTRIBUTES	----------------------
 		
 		private StateOperator isDeadStateOperator, isActiveStateOperator;
-		private EventSelector<AdvancedKeyEvent> selector;
+		private EventSelector<KeyEvent> selector;
 		private AreaGraph<Integer> graph;
 		
 		
@@ -87,7 +87,7 @@ public class ExodusTest
 		{
 			this.isActiveStateOperator = new StateOperator(true, false);
 			this.isDeadStateOperator = new LatchStateOperator(false);
-			this.selector = AdvancedKeyEvent.createEventTypeSelector(KeyEventType.PRESSED);
+			this.selector = KeyEvent.createEventTypeSelector(KeyEventType.PRESSED);
 			this.graph = graph;
 			
 			handlers.addHandled(this);
@@ -103,7 +103,7 @@ public class ExodusTest
 		}
 
 		@Override
-		public EventSelector<AdvancedKeyEvent> getKeyEventSelector()
+		public EventSelector<KeyEvent> getKeyEventSelector()
 		{
 			return this.selector;
 		}
@@ -115,7 +115,7 @@ public class ExodusTest
 		}
 
 		@Override
-		public void onKeyEvent(AdvancedKeyEvent event)
+		public void onKeyEvent(KeyEvent event)
 		{
 			// On 1, activates area 1, on 2 deactivates
 			// On 3, activates area 2, on 4 deactivates

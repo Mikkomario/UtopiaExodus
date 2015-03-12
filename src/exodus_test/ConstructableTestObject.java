@@ -101,12 +101,6 @@ public class ConstructableTestObject extends SimpleGameObject implements Transfo
 	}
 
 	@Override
-	public void setDepth(int arg0)
-	{
-		// Not gonna change
-	}
-
-	@Override
 	public Transformation getTransformation()
 	{
 		return this.transformation;
