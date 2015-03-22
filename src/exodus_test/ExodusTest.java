@@ -9,7 +9,7 @@ import genesis_event.KeyEvent.KeyEventType;
 import genesis_event.KeyListener;
 import genesis_util.LatchStateOperator;
 import genesis_util.StateOperator;
-import genesis_util.Vector2D;
+import genesis_util.Vector3D;
 import genesis_video.GamePanel;
 import genesis_video.GameWindow;
 import arc_bank.GamePhaseBank;
@@ -42,7 +42,7 @@ public class ExodusTest
 		GamePhaseBank.initializeGamePhaseResources("testing/gamePhases.txt", "test");
 		
 		// Opens the window
-		GameWindow window = new GameWindow(new Vector2D(300, 300), "Exodus Test", true, 120, 
+		GameWindow window = new GameWindow(new Vector3D(300, 300), "Exodus Test", true, 120, 
 				20);
 		GamePanel panel = window.getMainPanel().addGamePanel();
 		
