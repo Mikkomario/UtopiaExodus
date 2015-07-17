@@ -78,10 +78,10 @@ public class AreaObjectCreator<T extends GameObject & Constructable<T>> implemen
 	}
 
 	@Override
-	public void onAreaStateChange(Area area)
+	public void onAreaStateChange(Area area, boolean newState)
 	{
 		// When area starts, creates new objects
-		if (area.getIsActiveStateOperator().getState())
+		if (newState)
 		{
 			try
 			{

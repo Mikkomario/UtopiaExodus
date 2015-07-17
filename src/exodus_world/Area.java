@@ -27,7 +27,7 @@ public class Area extends Handler<GameObject> implements GameObject
 	private AreaListenerHandler listenerHandler;
 	private HandlerRelay handlers;
 	private StateOperator isActiveOperator;
-	private boolean willDeactivateOthers;
+	private boolean willDeactivateOthers, newState;
 	
 	
 	// CONSTRUCTOR	--------------------------------
@@ -83,7 +83,7 @@ public class Area extends Handler<GameObject> implements GameObject
 	protected boolean handleObject(GameObject h)
 	{
 		// Initializes / uninitializes the object
-		h.getIsActiveStateOperator().setState(getIsActiveStateOperator().getState());
+		h.getIsActiveStateOperator().setState(this.newState);
 		return true;
 	}
 	
@@ -103,6 +103,8 @@ public class Area extends Handler<GameObject> implements GameObject
 		
 		if (source == getIsActiveStateOperator())
 		{
+			this.newState = newState;
+			
 			// Activates or deactivates the gameObjects inside the area
 			if (newState)
 			{
@@ -122,7 +124,7 @@ public class Area extends Handler<GameObject> implements GameObject
 			else if (!otherAreasSharePhase())
 				ResourceActivator.endPhase(getPhase());
 			
-			this.listenerHandler.onAreaStateChange(this);
+			this.listenerHandler.onAreaStateChange(this, newState);
 			handleObjects();
 		}
 		// Kills the listenerHandler on death

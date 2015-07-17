@@ -14,7 +14,7 @@ public interface AreaListener extends Handled
 	/**
 	 * This method will be called when an area's state changes.
 	 * @param area The area which received a new state.
-	 * @see Area#getIsActiveStateOperator()
+	 * @param newState The area's new state of activity
 	 */
-	public void onAreaStateChange(Area area);
+	public void onAreaStateChange(Area area, boolean newState);
 }

@@ -16,6 +16,7 @@ public class AreaListenerHandler extends Handler<AreaListener> implements AreaLi
 	// ATTRIBUTES	------------------------------------------------------
 	
 	private Area lastArea;
+	private boolean newState;
 	
 	
 	// CONSTRUCTOR	------------------------------------------------------
@@ -58,9 +59,10 @@ public class AreaListenerHandler extends Handler<AreaListener> implements AreaLi
 	// IMPLEMENTED METHODS	----------------------------------------------
 	
 	@Override
-	public void onAreaStateChange(Area area)
+	public void onAreaStateChange(Area area, boolean newState)
 	{
 		this.lastArea = area;
+		this.newState = newState;
 		handleObjects();
 		this.lastArea = null;
 	}
@@ -74,7 +76,7 @@ public class AreaListenerHandler extends Handler<AreaListener> implements AreaLi
 	@Override
 	protected boolean handleObject(AreaListener h)
 	{
-		h.onAreaStateChange(this.lastArea);
+		h.onAreaStateChange(this.lastArea, this.newState);
 		return true;
 	}
 }
