@@ -1,7 +1,7 @@
 package exodus_util;
 
-import omega_util.SimpleGameObject;
 import exodus_world.AreaListener;
+import genesis_event.Handled;
 import genesis_event.HandlerType;
 
 /**
@@ -13,7 +13,7 @@ import genesis_event.HandlerType;
 public enum ExodusHandlerType implements HandlerType
 {
 	/**
-	 * Areas contain GameObjects and usually connect different handlers as well
+	 * Areas contain all kinds of handleds
 	 */
 	AREA, 
 	/**
@@ -29,7 +29,7 @@ public enum ExodusHandlerType implements HandlerType
 	{
 		switch (this)
 		{
-			case AREA: return SimpleGameObject.class;
+			case AREA: return Handled.class;
 			case AREALISTENERHANDLER: return AreaListener.class;
 		}
 		

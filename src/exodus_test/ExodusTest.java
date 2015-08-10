@@ -3,7 +3,6 @@ package exodus_test;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import omega_util.SimpleGameObject;
 import exodus_world.AreaBank;
 import exodus_world.AreaGraph;
 import genesis_event.Drawable;
@@ -14,7 +13,7 @@ import genesis_event.KeyEvent.KeyEventType;
 import genesis_event.KeyListener;
 import genesis_event.MouseEvent;
 import genesis_event.MouseListener;
-import genesis_util.LatchStateOperator;
+import genesis_util.SimpleHandled;
 import genesis_util.StateOperator;
 import genesis_util.StateOperatorListener;
 import genesis_util.Vector3D;
@@ -83,11 +82,10 @@ public class ExodusTest
 	
 	// SUBCLASSES	------------------------
 	
-	private static class KeyCommander implements KeyListener
+	private static class KeyCommander extends SimpleHandled implements KeyListener
 	{
 		// ATTRIBUTES	----------------------
 		
-		private StateOperator isDeadStateOperator, isActiveStateOperator;
 		private EventSelector<KeyEvent> selector;
 		private AreaGraph<Integer> graph;
 		
@@ -96,8 +94,8 @@ public class ExodusTest
 		
 		public KeyCommander(HandlerRelay handlers, AreaGraph<Integer> graph)
 		{
-			this.isActiveStateOperator = new StateOperator(true, false);
-			this.isDeadStateOperator = new LatchStateOperator(false);
+			super(handlers);
+			
 			this.selector = KeyEvent.createEventTypeSelector(KeyEventType.PRESSED);
 			this.graph = graph;
 			
@@ -106,23 +104,11 @@ public class ExodusTest
 		
 		
 		// IMPLEMENTED METHODS	--------------
-		
-		@Override
-		public StateOperator getIsDeadStateOperator()
-		{
-			return this.isDeadStateOperator;
-		}
 
 		@Override
 		public EventSelector<KeyEvent> getKeyEventSelector()
 		{
 			return this.selector;
-		}
-
-		@Override
-		public StateOperator getListensToKeyEventsOperator()
-		{
-			return this.isActiveStateOperator;
 		}
 
 		@Override
@@ -156,13 +142,12 @@ public class ExodusTest
 		}
 	}
 	
-	private static class TestMouseObject extends SimpleGameObject implements MouseListener, 
+	private static class TestMouseObject extends SimpleHandled implements MouseListener, 
 			Drawable, StateOperatorListener
 	{
 		// ATTRIBUTES	---------------
 		
 		private EventSelector<MouseEvent> selector;
-		private StateOperator isVisibleOperator;
 		private Vector3D lastMousePosition;
 		
 		
@@ -172,21 +157,14 @@ public class ExodusTest
 		{
 			super(handlers);
 			
-			this.isVisibleOperator = new StateOperator(true, true);
 			this.selector = MouseEvent.createMouseMoveSelector();
 			this.lastMousePosition = Vector3D.zeroVector();
 			
-			getIsActiveStateOperator().getListenerHandler().add(this);
+			getHandlingOperators().getDefaultOperator().getListenerHandler().add(this);
 		}
 		
 		
 		// IMPLEMENTED METHODS	--------
-
-		@Override
-		public StateOperator getListensToMouseEventsOperator()
-		{
-			return getIsActiveStateOperator();
-		}
 
 		@Override
 		public EventSelector<MouseEvent> getMouseEventSelector()
@@ -218,12 +196,6 @@ public class ExodusTest
 		public int getDepth()
 		{
 			return 0;
-		}
-
-		@Override
-		public StateOperator getIsVisibleStateOperator()
-		{
-			return this.isVisibleOperator;
 		}
 
 		@Override

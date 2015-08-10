@@ -4,14 +4,15 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import omega_util.SimpleGameObject;
-import omega_util.Transformable;
-import omega_util.Transformation;
 import flow_recording.Constructable;
 import genesis_event.Drawable;
+import genesis_event.GenesisHandlerType;
 import genesis_event.HandlerRelay;
 import genesis_util.DepthConstants;
+import genesis_util.SimpleHandled;
 import genesis_util.StateOperator;
+import genesis_util.Transformable;
+import genesis_util.Transformation;
 
 /**
  * TestObject is made for testing exodus functionalities (transformation & construction)
@@ -19,14 +20,13 @@ import genesis_util.StateOperator;
  * @author Mikko Hilpinen
  * @since 3.12.2014
  */
-public class ConstructableTestObject extends SimpleGameObject implements Transformable,
+public class ConstructableTestObject extends SimpleHandled implements Transformable,
 		Drawable, Constructable<ConstructableTestObject>
 {
 	// ATTRIBUTES	----------------------------
 	
 	private Transformation transformation;
 	private String id;
-	private StateOperator isVisibleOperator;
 	
 	
 	// CONSTRUCTOR	----------------------------
@@ -41,7 +41,8 @@ public class ConstructableTestObject extends SimpleGameObject implements Transfo
 		super(handlers);
 		
 		this.transformation = Transformation.identityTransformation();
-		this.isVisibleOperator = new StateOperator(true, true);
+		getHandlingOperators().setShouldBeHandledOperator(GenesisHandlerType.DRAWABLEHANDLER, 
+				new StateOperator(true, true));
 		
 		System.out.println("New testObject created");
 	}
@@ -92,12 +93,6 @@ public class ConstructableTestObject extends SimpleGameObject implements Transfo
 	public int getDepth()
 	{
 		return DepthConstants.NORMAL;
-	}
-
-	@Override
-	public StateOperator getIsVisibleStateOperator()
-	{
-		return this.isVisibleOperator;
 	}
 
 	@Override

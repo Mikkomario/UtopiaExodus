@@ -63,7 +63,7 @@ public class AreaListenerHandler extends Handler<AreaListener> implements AreaLi
 	{
 		this.lastArea = area;
 		this.newState = newState;
-		handleObjects();
+		handleObjects(false);
 		this.lastArea = null;
 	}
 

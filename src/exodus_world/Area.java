@@ -2,11 +2,11 @@ package exodus_world;
 
 import java.util.List;
 
-import omega_util.GameObject;
 import exodus_util.ExodusHandlerType;
 import arc_bank.GamePhaseBank;
 import arc_resource.GamePhase;
 import arc_resource.ResourceActivator;
+import genesis_event.Handled;
 import genesis_event.Handler;
 import genesis_event.HandlerRelay;
 import genesis_event.HandlerType;
@@ -19,7 +19,7 @@ import genesis_util.StateOperator;
  * @author Mikko Hilpinen
  * @since 2.12.2014
  */
-public class Area extends Handler<GameObject> implements GameObject
+public class Area extends Handler<Handled>
 {
 	// ATTRIBUTES	--------------------------------
 	
@@ -35,7 +35,8 @@ public class Area extends Handler<GameObject> implements GameObject
 	/**
 	 * Creates a new Area
 	 * @param name The name of the area
-	 * @param handlers The handlers that will be used in this area
+	 * @param handlers The handlers that will be used in this area. The Area will be added 
+	 * to the handlers as well.
 	 * @param gamePhaseBankName The name of the GamePhaseBank that contains the gamePhase 
 	 * that is used in this area (optional, default bank will be used if left null)
 	 * @param gamePhaseName The name of the gamePhase used in this area
@@ -56,6 +57,7 @@ public class Area extends Handler<GameObject> implements GameObject
 		this.isActiveOperator = new StateOperator(false, true);
 		this.listenerHandler = new AreaListenerHandler(false);
 		this.willDeactivateOthers = false;
+		this.newState = getIsActiveStateOperator().getState();
 		
 		// Initializes handlers
 		this.handlers.addHandler(this);
@@ -66,34 +68,30 @@ public class Area extends Handler<GameObject> implements GameObject
 	
 	
 	// IMPLEMENTED METHODS	--------------------------
-
-	@Override
-	public StateOperator getIsActiveStateOperator()
-	{
-		return this.isActiveOperator;
-	}
 	
 	@Override
 	public HandlerType getHandlerType()
 	{
 		return ExodusHandlerType.AREA;
 	}
-
+	
 	@Override
-	protected boolean handleObject(GameObject h)
+	protected boolean handleObject(Handled h)
 	{
-		// Initializes / uninitializes the object
-		h.getIsActiveStateOperator().setState(this.newState);
+		// The objects can only be handled whilst the area is active
+		h.getHandlingOperators().setAllStates(this.newState);
 		return true;
 	}
 	
 	@Override
-	public void add(GameObject g)
+	public void add(Handled h)
 	{
-		super.add(g);
-		
+		super.add(h);
+		// Area handling state cannot be changed
+		h.getHandlingOperators().setShouldBeHandledOperator(getHandlerType(), 
+				new StateOperator(true, false));
 		// Changes the objects state to match the state of the area as well
-		handleObject(g);
+		handleObject(h);
 	}
 	
 	@Override
@@ -125,7 +123,7 @@ public class Area extends Handler<GameObject> implements GameObject
 				ResourceActivator.endPhase(getPhase());
 			
 			this.listenerHandler.onAreaStateChange(this, newState);
-			handleObjects();
+			handleObjects(false);
 		}
 		// Kills the listenerHandler on death
 		else if (source == getIsDeadStateOperator() && newState)
@@ -199,6 +197,14 @@ public class Area extends Handler<GameObject> implements GameObject
 
 	
 	// OTHER METHODS	-------------------------------
+	
+	/**
+	 * @return The stateOperator that defines whether the area is active (started) or not
+	 */
+	public StateOperator getIsActiveStateOperator()
+	{
+		return this.isActiveOperator;
+	}
 	
 	/**
 	 * Starts the area. The same (without closing other areas) can be achieved just by 

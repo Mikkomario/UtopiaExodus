@@ -2,10 +2,12 @@ package exodus_world;
 
 import java.io.FileNotFoundException;
 
-import omega_util.GameObject;
 import flow_recording.AbstractConstructor;
 import flow_recording.Constructable;
 import flow_recording.TextConstructorInstructor;
+import genesis_event.Handled;
+import genesis_util.HandlingStateOperatorRelay;
+import genesis_util.Killable;
 import genesis_util.StateOperator;
 
 /**
@@ -16,7 +18,7 @@ import genesis_util.StateOperator;
  * @param <T> The type of object constructed by this objectCreator
  * @since 2.12.2014
  */
-public class AreaObjectCreator<T extends GameObject & Constructable<T>> implements AreaListener
+public class AreaObjectCreator<T extends Handled & Constructable<T>> implements AreaListener
 {
 	// ATTRIBUTES	----------------------------
 	
@@ -24,6 +26,7 @@ public class AreaObjectCreator<T extends GameObject & Constructable<T>> implemen
 	private AbstractConstructor<T> constructor;
 	private String fileName;
 	private Area area;
+	private HandlingStateOperatorRelay operators;
 	
 	
 	// CONSTRUCTOR	---------------------------
@@ -42,6 +45,7 @@ public class AreaObjectCreator<T extends GameObject & Constructable<T>> implemen
 		this.instructor = new TextConstructorInstructor(constructor);
 		this.fileName = fileName;
 		this.area = area;
+		this.operators = new HandlingStateOperatorRelay(new StateOperator(true, false));
 		
 		// Adds the object to the handler(s)
 		if (area != null)
@@ -61,6 +65,7 @@ public class AreaObjectCreator<T extends GameObject & Constructable<T>> implemen
 		this.instructor = new TextConstructorInstructor(constructor);
 		this.fileName = area.getOjectConstructorFileName();
 		this.area = area;
+		this.operators = new HandlingStateOperatorRelay(new StateOperator(true, false));
 		
 		// Adds the object to the handler(s)
 		if (area != null)
@@ -96,11 +101,17 @@ public class AreaObjectCreator<T extends GameObject & Constructable<T>> implemen
 		// When area ends, kills them
 		else
 		{
-			for (GameObject construct : this.constructor.getConstructs().values())
+			for (Killable construct : this.constructor.getConstructs().values())
 			{
 				construct.getIsDeadStateOperator().setState(true);
 			}
 			this.constructor.reset();
 		}
+	}
+
+	@Override
+	public HandlingStateOperatorRelay getHandlingOperators()
+	{
+		return this.operators;
 	}
 }

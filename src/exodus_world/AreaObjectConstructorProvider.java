@@ -1,8 +1,8 @@
 package exodus_world;
 
-import omega_util.GameObject;
 import flow_recording.AbstractConstructor;
 import flow_recording.Constructable;
+import genesis_event.Handled;
 
 /**
  * This class provides an interface between the engine and the user. The provider should 
@@ -13,7 +13,7 @@ import flow_recording.Constructable;
  * @param <T> The type of object constructed by the constructors provided by this object
  * @since 3.12.2014
  */
-public interface AreaObjectConstructorProvider<T extends GameObject & Constructable<T>>
+public interface AreaObjectConstructorProvider<T extends Handled & Constructable<T>>
 {
 	/**
 	 * This method should provide a suitable object constructor for the given area.
