@@ -14,20 +14,25 @@ import genesis_util.StateOperator;
 
 /**
  * Areas contain objects and keep track of different handlers. They also each have a GamePhase 
- * that is activated when an area is active.
- * 
+ * that is activated when an area is active
  * @author Mikko Hilpinen
  * @since 2.12.2014
  */
-public class Area extends Handler<Handled>
+// TODO: Implement state operator listener
+public class Area extends Handler<Handled> // TODO: Area shouldn't extend handler (area's handler relay will handle that)
 {
 	// ATTRIBUTES	--------------------------------
 	
+	// TODO: Remove name (handled at bank level), remove connection to game phase 
+	// (Create a separate extension to resource manager that handles areas), 
+	// Object constructor file name needs to be 
+	// the constructor's property
 	private String name, gamePhaseBankName, gamePhaseName, objectConstructorFileName;
 	private AreaListenerHandler listenerHandler;
 	private HandlerRelay handlers;
-	private StateOperator isActiveOperator;
-	private boolean willDeactivateOthers, newState;
+	private StateOperator isActiveOperator; // Replace with enum state
+	private boolean willDeactivateOthers, newState; // TODO: Remove these (?)
+	// TODO: Add phase start default state. Add states in general
 	
 	
 	// CONSTRUCTOR	--------------------------------
@@ -44,7 +49,7 @@ public class Area extends Handler<Handled>
 	 * objectCreator (optional, the fileName can be provided directly to the creator as well)
 	 */
 	public Area(String name, HandlerRelay handlers, String gamePhaseBankName, 
-			String gamePhaseName, String objectConstructorFileName)
+			String gamePhaseName, String objectConstructorFileName) // TODO: Remove unnecessary, add object constructor
 	{
 		super(false, handlers);
 		
@@ -70,13 +75,13 @@ public class Area extends Handler<Handled>
 	// IMPLEMENTED METHODS	--------------------------
 	
 	@Override
-	public HandlerType getHandlerType()
+	public HandlerType getHandlerType() // TODO: Remove
 	{
 		return ExodusHandlerType.AREA;
 	}
 	
 	@Override
-	protected boolean handleObject(Handled h)
+	protected boolean handleObject(Handled h) // TODO: Manipulate the handlers instead of the handleds
 	{
 		// The objects can only be handled whilst the area is active
 		h.getHandlingOperators().setAllStates(this.newState);
@@ -84,7 +89,7 @@ public class Area extends Handler<Handled>
 	}
 	
 	@Override
-	public void add(Handled h)
+	public void add(Handled h) // TODO: Remove
 	{
 		super.add(h);
 		// Area handling state cannot be changed
@@ -94,6 +99,7 @@ public class Area extends Handler<Handled>
 		handleObject(h);
 	}
 	
+	// TODO: Make this function area listening (in an inner class)
 	@Override
 	public void onStateChange(StateOperator source, boolean newState)
 	{
@@ -103,6 +109,8 @@ public class Area extends Handler<Handled>
 		{
 			this.newState = newState;
 			
+			// TODO: Only affect handlers. The object constructor should destroy 
+			// non-persistent creations on end state
 			// Activates or deactivates the gameObjects inside the area
 			if (newState)
 			{
@@ -125,6 +133,7 @@ public class Area extends Handler<Handled>
 			this.listenerHandler.onAreaStateChange(this, newState);
 			handleObjects(false);
 		}
+		// TODO: Remove, no death needed for areas
 		// Kills the listenerHandler on death
 		else if (source == getIsDeadStateOperator() && newState)
 		{
@@ -139,7 +148,7 @@ public class Area extends Handler<Handled>
 	/**
 	 * @return The name of the area
 	 */
-	public String getName()
+	public String getName() // TODO: Remove (?)
 	{
 		return this.name;
 	}
@@ -147,7 +156,7 @@ public class Area extends Handler<Handled>
 	/**
 	 * @return The gamePhase that will be activated when this area starts
 	 */
-	public GamePhase getPhase()
+	public GamePhase getPhase() // TODO: Remove
 	{
 		if (this.gamePhaseBankName == null)
 			return GamePhaseBank.getGamePhase(this.gamePhaseName);
@@ -174,7 +183,7 @@ public class Area extends Handler<Handled>
 	/**
 	 * @return The name of the GamePhaseBank this area uses
 	 */
-	protected String getGamePhaseBankName()
+	protected String getGamePhaseBankName() // TODO: Remove
 	{
 		return this.gamePhaseBankName;
 	}
@@ -182,7 +191,7 @@ public class Area extends Handler<Handled>
 	/**
 	 * @return The name of the GamePhase this area uses
 	 */
-	protected String getGamePhaseName()
+	protected String getGamePhaseName() // TODO: Remove
 	{
 		return this.gamePhaseName;
 	}
@@ -190,7 +199,7 @@ public class Area extends Handler<Handled>
 	/**
 	 * @return The file the objectCreators in this area should use by default
 	 */
-	protected String getOjectConstructorFileName()
+	protected String getOjectConstructorFileName() // TODO: Remove
 	{
 		return this.objectConstructorFileName;
 	}
@@ -201,7 +210,7 @@ public class Area extends Handler<Handled>
 	/**
 	 * @return The stateOperator that defines whether the area is active (started) or not
 	 */
-	public StateOperator getIsActiveStateOperator()
+	public StateOperator getIsActiveStateOperator() // TODO: Remove. Replace with state getter + setters
 	{
 		return this.isActiveOperator;
 	}
@@ -227,7 +236,7 @@ public class Area extends Handler<Handled>
 		getIsActiveStateOperator().setState(false);
 	}
 	
-	private List<Area> getOtherActiveAreas()
+	private List<Area> getOtherActiveAreas() // TODO: Doesn't belong here
 	{
 		if (!getIsActiveStateOperator().getState())
 			return AreaBank.getActiveAreas();
@@ -237,7 +246,7 @@ public class Area extends Handler<Handled>
 		return activeAreas;
 	}
 	
-	private boolean otherAreasSharePhase()
+	private boolean otherAreasSharePhase() // TODO: Doesn't belong here
 	{
 		for (Area area : getOtherActiveAreas())
 		{
