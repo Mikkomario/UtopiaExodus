@@ -18,6 +18,7 @@ import arc_bank.MultiMediaHolder;
  */
 public class AreaBank
 {
+	// TODO: Replace with another area interface
 	// CONSTRUCTOR	--------------------------
 	
 	private AreaBank()

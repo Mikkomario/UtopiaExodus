@@ -17,6 +17,8 @@ import flow_structure.GraphNode;
  */
 public class AreaGraph<T> extends Graph<Area, T>
 {
+	// TODO: Integrate with the new area interface when it has been implemented
+	
 	// ATTRIBUTES	------------------------
 	
 	private String areaBankName;

@@ -10,6 +10,7 @@ import genesis_event.Handled;
  * @author Mikko Hilpinen
  * @since 2.12.2014
  */
+// TODO: Remove
 public interface ConstructableHandled extends Handled, Constructable<ConstructableHandled>
 {
 	// This interface is a wrapper for combining the super interfaces.

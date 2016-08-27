@@ -11,6 +11,7 @@ import genesis_event.Handled;
  */
 public interface AreaListener extends Handled
 {
+	// TODO: Refine by adding real events and selectors
 	/**
 	 * This method will be called when an area's state changes.
 	 * @param area The area which received a new state.

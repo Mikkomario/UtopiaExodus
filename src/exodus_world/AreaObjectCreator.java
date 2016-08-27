@@ -22,11 +22,12 @@ public class AreaObjectCreator<T extends Handled & Constructable<T>> implements 
 {
 	// ATTRIBUTES	----------------------------
 	
-	private TextConstructorInstructor instructor;
-	private AbstractConstructor<T> constructor;
-	private String fileName;
-	private Area area;
-	private HandlingStateOperatorRelay operators;
+	private TextConstructorInstructor instructor; // TODO: Use xml element reader instead
+	private AbstractConstructor<T> constructor; // TODO: Make abstract methods to replace this
+	private String fileName; // TODO: Use paths, append area name to the path
+	private Area area; // TODO: Remove this connection
+	private HandlingStateOperatorRelay operators; // TODO: Remove area listening and 
+	// handled implementation and make the area use an object creator / creators instead
 	
 	
 	// CONSTRUCTOR	---------------------------
@@ -76,14 +77,14 @@ public class AreaObjectCreator<T extends Handled & Constructable<T>> implements 
 	// IMPLEMENTED METHODS	-----------------------------
 
 	@Override
-	public StateOperator getIsDeadStateOperator()
+	public StateOperator getIsDeadStateOperator() // TODO: Remove
 	{
 		// The creator's state is tied to the area's
 		return this.area.getIsDeadStateOperator();
 	}
 
 	@Override
-	public void onAreaStateChange(Area area, boolean newState)
+	public void onAreaStateChange(Area area, boolean newState) // TODO: Replace with createObjects and killObjects
 	{
 		// When area starts, creates new objects
 		if (newState)
@@ -110,7 +111,7 @@ public class AreaObjectCreator<T extends Handled & Constructable<T>> implements 
 	}
 
 	@Override
-	public HandlingStateOperatorRelay getHandlingOperators()
+	public HandlingStateOperatorRelay getHandlingOperators() // TODO: Remove
 	{
 		return this.operators;
 	}

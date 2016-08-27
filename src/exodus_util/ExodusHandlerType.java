@@ -15,7 +15,7 @@ public enum ExodusHandlerType implements HandlerType
 	/**
 	 * Areas contain all kinds of handleds
 	 */
-	AREA, 
+	AREA, // TODO: Remove
 	/**
 	 * AreaListenerHandlers inform areaListeners
 	 */

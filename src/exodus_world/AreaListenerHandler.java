@@ -16,7 +16,7 @@ public class AreaListenerHandler extends Handler<AreaListener> implements AreaLi
 	// ATTRIBUTES	------------------------------------------------------
 	
 	private Area lastArea;
-	private boolean newState;
+	private boolean newState; // TODO: Use events instead
 	
 	
 	// CONSTRUCTOR	------------------------------------------------------

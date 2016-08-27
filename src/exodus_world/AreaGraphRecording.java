@@ -10,6 +10,7 @@ import flow_structure.GraphRecording;
  * @author Mikko Hilpinen
  * @since 6.12.2014
  * @param <T> The type of data contained within the edges of the graph
+ * @deprecated Graph recording is not supported on latest versions of Flow
  */
 public class AreaGraphRecording<T> extends GraphRecording<Area, T>
 {

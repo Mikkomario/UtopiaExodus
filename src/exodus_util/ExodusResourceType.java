@@ -14,5 +14,5 @@ public enum ExodusResourceType implements ResourceType
 	 * Areas contain different GameObjects. Areas should not be introduced in a GamePhase 
 	 * since they control GamePhases and require them in order to work.
 	 */
-	AREA;
+	AREA; // TODO: Remove
 }

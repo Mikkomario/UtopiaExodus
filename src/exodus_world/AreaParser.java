@@ -10,6 +10,7 @@ import genesis_event.HandlerRelay;
  * @author Mikko Hilpinen
  * @since 6.12.2014
  */
+// TODO: Replace this feature somewhere near the common area interface
 public class AreaParser implements ObjectParser<Area>
 {
 	// ATTRIBUTES	--------------------------
