@@ -5,6 +5,8 @@ import java.util.List;
 
 import utopia.exodus.world.Area;
 import utopia.inception.event.Event;
+import utopia.inception.event.MultiEventSelector;
+import utopia.inception.event.StrictEventSelector;
 
 /**
  * These events are created when an area's state changes
@@ -72,6 +74,56 @@ public class AreaEvent implements Event
 	public AreaStateChange getStateChange()
 	{
 		return this.stateChange;
+	}
+	
+	
+	// OTHER METHODS	-------------
+	
+	/**
+	 * Creates a new selector than only selects events for specific area state changes
+	 * @param startState The required area start state
+	 * @param endState The required area end state
+	 * @return The selector
+	 */
+	public static StrictEventSelector createStateChangeSelector(Area.State startState, Area.State endState)
+	{
+		StrictEventSelector selector = new StrictEventSelector();
+		selector.addRequiredFeature(new AreaStateChange(startState, endState));
+		return selector;
+	}
+	
+	/**
+	 * Creates an event selector which selects all events where area gains the provided state
+	 * @param startState The state that causes events when area gains it
+	 * @return The selector
+	 */
+	public static MultiEventSelector createStateStartsSelector(Area.State startState)
+	{
+		MultiEventSelector selector = new MultiEventSelector();
+		for (Area.State endState : Area.State.values())
+		{
+			if (endState != startState)
+				selector.addOption(createStateChangeSelector(startState, endState));
+		}
+		
+		return selector;
+	}
+	
+	/**
+	 * Creates an event selector which selects all events where area loses the provided state
+	 * @param endState The state that causes events when area loses it
+	 * @return The selector
+	 */
+	public static MultiEventSelector createStateEndsSelector(Area.State endState)
+	{
+		MultiEventSelector selector = new MultiEventSelector();
+		for (Area.State startState : Area.State.values())
+		{
+			if (startState != endState)
+				selector.addOption(createStateChangeSelector(startState, endState));
+		}
+		
+		return selector;
 	}
 	
 	

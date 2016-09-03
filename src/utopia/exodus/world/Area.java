@@ -30,6 +30,7 @@ public class Area
 	 * @param name The name of the area
 	 * @param handlers The handlers that will be used in this area
 	 */
+	// TODO: The area should create its handler relay by itself so that it "owns" it
 	public Area(String name, HandlerRelay handlers) // TODO: add object constructor
 	{
 		// Initializes attributes
