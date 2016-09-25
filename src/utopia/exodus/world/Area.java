@@ -1,6 +1,7 @@
 package utopia.exodus.world;
 
-import exodus_world.AreaListenerHandler;
+import utopia.exodus.event.AreaEvent;
+import utopia.exodus.event.AreaListenerHandler;
 import utopia.inception.handling.HandlerRelay;
 
 /**
@@ -36,7 +37,7 @@ public class Area
 		// Initializes attributes
 		this.name = name;
 		this.handlers = handlers;
-		this.listenerHandler = new AreaListenerHandler(false);
+		this.listenerHandler = new AreaListenerHandler();
 		
 		// Sets the handling state to match that of the area
 		this.handlers.setHandlingStates(false);
@@ -85,10 +86,13 @@ public class Area
 	 */
 	public void setState(State state)
 	{
+		State previousState = this.state;
 		this.state = state;
 		getHandlers().setHandlingStates(getState() == State.ACTIVE);
 		// TODO: Interact with the object creator as well
-		// TODO: Inform listeners
+		
+		// Informs listeners
+		getListenerHandler().onAreaEvent(new AreaEvent(this, previousState, this.state));
 	}
 	
 	
